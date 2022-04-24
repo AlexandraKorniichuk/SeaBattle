@@ -4,7 +4,7 @@ namespace SeaBattle
 {
     public class Field
     {
-        private static (int i, int j) FieldSize = (10, 10);
+        public static (int i, int j) FieldSize = (10, 10);
         private const int ShipCount = 20;
 
         private Random rand = new Random();
@@ -12,17 +12,26 @@ namespace SeaBattle
         {
             (int i, int j)[] ShipsPositions = GetShipPositions();
 
-            char[,] Field = new char[FieldSize.i, FieldSize.j];
+            char[,] Field = CreateEmptyField();
             for(int i = 0; i < FieldSize.i; i++)
             {
                 for (int j = 0; j < FieldSize.j; j++)
                 {
-                    char cell;
                     if (IsCellShip(ShipsPositions, (i, j)))
-                        cell = CellSymbol.ShipSymbol;
-                    else
-                        cell = CellSymbol.EmptySymbol;
-                    Field[i, j] = cell;
+                        Field[i, j] = CellSymbol.ShipSymbol;
+                }
+            }
+            return Field;
+        }
+
+        public char[,] CreateEmptyField()
+        {
+            char[,] Field = new char[FieldSize.i, FieldSize.j];
+            for (int i = 0; i < FieldSize.i; i++)
+            {
+                for (int j = 0; j < FieldSize.j; j++)
+                {
+                    Field[i, j] = CellSymbol.EmptySymbol;
                 }
             }
             return Field;

@@ -6,10 +6,30 @@ namespace SeaBattle
     {
         public static int GetInputKey(ConsoleKey inputKey)
         {
-            if (inputKey == ConsoleKey.D1) return 1;
-            if (inputKey == ConsoleKey.D2) return 2;
-            if (inputKey == ConsoleKey.D3) return 3;
+            if (inputKey == ConsoleKey.D1) return Game.GameType1;
+            if (inputKey == ConsoleKey.D2) return Game.GameType2;
+            if (inputKey == ConsoleKey.D3) return Game.GameType3;
             return 0;
         }
+
+        public static (int, int) GetCursorPosition() => 
+            (Console.CursorLeft, Console.CursorLeft);
+
+        public static (int, int) GetDirection(string directionString)
+        {
+            int i = 0, j = 0;
+            if (directionString == "UpArrow")
+                i = -1;
+            else if (directionString == "DownArrow")
+                i = 1;
+            else if (directionString == "RightArrow")
+                j = 1;
+            else if (directionString == "LeftArrow")
+                j = -1;
+            return (i, j);
+        }
+
+        public static (int, int) GetNewPosition((int i, int j) OldPosition, (int i, int j) direction) =>
+            (OldPosition.i + direction.i, OldPosition.j + direction.j);
     }
 }

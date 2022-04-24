@@ -12,6 +12,7 @@ namespace SeaBattle
             ShowGreating();
             GameType = GetInputGameTypeKey();
             Console.Clear();
+            SetConsoleSettings();
         }
 
         private void ShowGreating()
@@ -22,7 +23,7 @@ namespace SeaBattle
             Console.WriteLine();
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Use arrows to choose cell");
+            Console.WriteLine("Use arrows to choose cell and enter to select");
             Console.WriteLine();
 
             Console.ForegroundColor = ConsoleColor.Green;
@@ -36,33 +37,26 @@ namespace SeaBattle
         private int GetInputGameTypeKey() =>
             Converting.GetInputKey(InputController.InputKey());
 
-        //public void EndRound()
-        //{
-        //    WriteResultMessage();
-        //    WriteOfferMessage();
-        //    IsEndGame = !HavePlayAgainKeyInput();
-        //    Console.Clear();
-        //}
+        private void SetConsoleSettings() =>
+            Console.CursorSize = 100;
 
-        //private void WriteResultMessage()
-        //{
-        //    if (Game.IsWin)
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Yellow;
-        //        Console.WriteLine("Congratulations, you made it out");
-        //    }
-        //    else
-        //    {
-        //        Console.ForegroundColor = ConsoleColor.Red;
-        //        Console.WriteLine("Your time is up");
-        //    }
-        //    Console.ForegroundColor = ConsoleColor.White;
-        //}
+        public void EndRound()
+        {
+            WriteResultMessage();
+            WriteOfferMessage();
+            IsEndGame = !HavePlayAgainKeyInput();
+            Console.Clear();
+        }
 
-        //private void WriteOfferMessage() =>
-        //    Console.WriteLine($"If you want to play again - press '{PlayAgainKey}'");
+        private void WriteResultMessage()
+        {
+            
+        }
 
-        //private bool HavePlayAgainKeyInput() =>
-        //    InputController.GetInputKey() == PlayAgainKey;
+        private void WriteOfferMessage() =>
+            Console.WriteLine($"If you want to play again - press '{PlayAgainKey}'");
+
+        private bool HavePlayAgainKeyInput() =>
+            InputController.GetInputKey() == PlayAgainKey;
     }
 }
