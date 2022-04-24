@@ -1,15 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeaBattle
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
+            Lobby lobby = new Lobby();
+
+            lobby.OpenLobby();
+
+            do
+            {
+                Game game = new Game();
+                game.StartNewRound(lobby.GameType);
+
+                //lobby.EndRound();
+            } while (!lobby.IsEndGame);
+            Console.ReadKey();
         }
     }
 }
