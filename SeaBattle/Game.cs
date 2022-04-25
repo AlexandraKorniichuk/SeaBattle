@@ -15,8 +15,11 @@ namespace SeaBattle
         public static int GameType3 = 3;
         private int GameType = 1;
 
-        private static bool IsFirstPlayerMove;
+        private bool IsFirstPlayerMove;
         public static bool IsFirstPlayerWin;
+
+        private int FirstPlayerHitsAmount = 0;
+        private int SecondPlayerHitsAmount = 0;
 
         private Random random = new Random();
         public void StartNewRound(int gameType)
@@ -29,6 +32,7 @@ namespace SeaBattle
             IsFirstPlayerMove = true;
 
             GameLoop();
+            IsFirstPlayerWin = IsPlayerWin(FirstPlayerHitsAmount);
         }
 
         private void GameLoop()
@@ -36,6 +40,7 @@ namespace SeaBattle
             do
             {
                 DrawFields();
+                WriteWhosMove();
 
                 (int, int) SelectedCell = GetSelectedCell();
                 Move(SelectedCell);
@@ -43,11 +48,13 @@ namespace SeaBattle
                 Console.Clear();
 
                 DrawFields();
+                WriteWhosMove();
+
                 Console.ReadKey();
                 Console.Clear();
 
                 IsFirstPlayerMove = !IsFirstPlayerMove;
-            } while (true);
+            } while (!IsEndRound());
         }
 
         private void CreateFields()
@@ -131,9 +138,44 @@ namespace SeaBattle
         private void Move((int i, int j) NewCellPosition)
         {
             if (IsFirstPlayerMove)
-                Field.TryBringDownShip(NewCellPosition, ref OpenField2, ref HiddenField2);
+                TryBringDownShip(NewCellPosition, ref OpenField2, ref HiddenField2, ref FirstPlayerHitsAmount);
             else
-                Field.TryBringDownShip(NewCellPosition, ref OpenField1, ref HiddenField1);
+                TryBringDownShip(NewCellPosition, ref OpenField1, ref HiddenField1, ref SecondPlayerHitsAmount);
+        }
+
+        public void TryBringDownShip((int, int) NewCellPosition, ref char[,] OpenField, ref char[,] HiddenField, ref int HitsAmount)
+        {
+            if (Field.IsCellPositionShip(NewCellPosition, OpenField))
+            {
+                HitsAmount++;
+                TakeAShot(NewCellPosition, ref OpenField, ref HiddenField, CellSymbol.HitInShipSymbol);
+            }
+            else
+            {
+                TakeAShot(NewCellPosition, ref OpenField, ref HiddenField, CellSymbol.HitOutEmptySymbol);
+            }
+        }
+
+        private void TakeAShot((int i, int j) newCellPosition, ref char[,] openField, ref char[,] hiddenField, char symbol)
+        {
+            openField[newCellPosition.i, newCellPosition.j] = symbol;
+            hiddenField[newCellPosition.i, newCellPosition.j] = symbol;
+        }
+
+        private bool IsEndRound() =>
+            IsPlayerWin(FirstPlayerHitsAmount) || IsPlayerWin(SecondPlayerHitsAmount);
+
+        private bool IsPlayerWin(int PlayerHitsAmount) =>
+            PlayerHitsAmount == Field.ShipCount;
+
+        private void WriteWhosMove()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            if (IsFirstPlayerMove)
+                Console.WriteLine("First Player");
+            else
+                Console.WriteLine("Second Player");
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }

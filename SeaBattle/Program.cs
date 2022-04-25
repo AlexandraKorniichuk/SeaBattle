@@ -11,7 +11,7 @@ namespace SeaBattle
 
             Game game = new Game();
             game.StartNewRound(lobby.GameType);
-
+            lobby.EndRound(); 
 
             //for later
             //do

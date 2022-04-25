@@ -43,14 +43,20 @@ namespace SeaBattle
         public void EndRound()
         {
             WriteResultMessage();
-            WriteOfferMessage();
-            IsEndGame = !HavePlayAgainKeyInput();
-            Console.Clear();
+            //forlater
+            //WriteOfferMessage();
+            //IsEndGame = !HavePlayAgainKeyInput();
+            //Console.Clear();
         }
 
         private void WriteResultMessage()
         {
-            
+            Console.ForegroundColor = ConsoleColor.Green;
+            if (Game.IsFirstPlayerWin)
+                Console.WriteLine("All ships of second player have reached the bottom. First player, congratulations");
+            else
+                Console.WriteLine("All ships of first player have reached the bottom. Second player, congratulations");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         private void WriteOfferMessage() =>

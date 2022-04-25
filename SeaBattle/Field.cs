@@ -5,7 +5,7 @@ namespace SeaBattle
     public class Field
     {
         public static (int i, int j) FieldSize = (10, 10);
-        private const int ShipCount = 20;
+        public static int ShipCount = 20;
 
         private Random rand = new Random();
         public char[,] CreateOpenField()
@@ -87,21 +87,7 @@ namespace SeaBattle
                 
         }
 
-        public static void TryBringDownShip((int, int) NewCellPosition, ref char[,] OpenField, ref char[,] HiddenField)
-        {
-            if (IsCellPositionShip(NewCellPosition, OpenField))
-                TakeAShot(NewCellPosition, ref OpenField, ref HiddenField, CellSymbol.HitInShipSymbol);
-            else
-                TakeAShot(NewCellPosition, ref OpenField, ref HiddenField, CellSymbol.HitOutEmptySymbol);
-        }
-
-        private static void TakeAShot((int i, int j) newCellPosition, ref char[,] openField, ref char[,] hiddenField, char symbol)
-        {
-            openField[newCellPosition.i, newCellPosition.j] = symbol;
-            hiddenField[newCellPosition.i, newCellPosition.j] = symbol;
-        }
-
-        private static bool IsCellPositionShip((int i, int j) newCellPosition, char[,] openField) =>
+        public static bool IsCellPositionShip((int i, int j) newCellPosition, char[,] openField) =>
             openField[newCellPosition.i, newCellPosition.j] == CellSymbol.ShipSymbol;
     }
 }
