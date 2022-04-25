@@ -16,8 +16,9 @@ namespace SeaBattle
         private int GameType = 1;
 
         private static bool IsFirstPlayerMove;
-
         public static bool IsFirstPlayerWin;
+
+        private Random random = new Random();
         public void StartNewRound(int gameType)
         {
             GameType = gameType;
@@ -37,16 +38,13 @@ namespace SeaBattle
                 DrawFields();
 
                 (int, int) SelectedCell = GetSelectedCell();
-
+                Move(SelectedCell);
 
                 Console.Clear();
 
-                if (IsTheRighMove())
-                {
-                    DrawFields();
-                    Console.ReadKey();
-                    Console.Clear();
-                }
+                DrawFields();
+                Console.ReadKey();
+                Console.Clear();
 
                 IsFirstPlayerMove = !IsFirstPlayerMove;
             } while (true);
@@ -55,65 +53,87 @@ namespace SeaBattle
         private void CreateFields()
         {
             OpenField1 = field.CreateOpenField();
-            if (GameType != GameType2) 
-                OpenField2 = field.CreateOpenField();
-            if (GameType == GameType1)
-                HiddenField1 = field.CreateEmptyField();
-            if (GameType != GameType3)
-                HiddenField2 = field.CreateEmptyField();
+            OpenField2 = field.CreateOpenField();
+            HiddenField1 = field.CreateEmptyField();
+            HiddenField2 = field.CreateEmptyField();
         }
 
         private void DrawFields()
         {
-            if (IsSecondFieldOpen())
-                field.DrawField(OpenField1);
-            else
-                field.DrawField(HiddenField1);
-
+            field.DrawField(DefineDrawingField(OpenField1, HiddenField2, HiddenField1));
             Console.WriteLine();
-
-            if (IsFirstPlayerMove)
-                field.DrawField(OpenField2);
-            else
-                field.DrawField(HiddenField2);
+            field.DrawField(DefineDrawingField(OpenField2, OpenField1, OpenField2));
         }
 
-        private bool IsSecondFieldOpen() =>
-            !IsFirstPlayerMove && GameType == GameType1;
+        private char[,] DefineDrawingField(char[,] openField, char[,] field1, char[,] field2)
+        {
+            if (IsFirstFieldOpen())
+            {
+                return openField;
+            }
+            else
+            {
+                if (IsFirstPlayerMove)
+                    return field1;
+                else
+                    return field2;
+            }
+        }
 
-        private bool IsTheRighMove() =>
+        private bool IsFirstFieldOpen() =>
+            GameType == GameType3;
+
+        private bool IsTheHumanMove() =>
             GameType == GameType1 || (GameType == GameType2 && IsFirstPlayerMove);
 
         private (int, int) GetSelectedCell()
         {
-            (int, int) SelectedCell = (0, 0);
-            if (IsTheRighMove())
+            (int, int) SelectedCell;
+            if (IsTheHumanMove())
                 SelectedCell = InputCell();
             else
-                SelectedCell = GetRandomPosition();
+                SelectedCell = GetNewRandomPosition();
                 
             return SelectedCell;
         }
 
         private (int, int) InputCell()
         {
-            (int, int) CurrentPosition = Converting.GetCursorPosition();
             (int, int) NewPosition;
+            Cursor.SetCursorPosition();
             do
             {
-                InputCell();
+                InputController.MoveCursor();
                 NewPosition = Converting.GetCursorPosition();
-            } while (CurrentPosition == NewPosition && !IsPlaceFree(NewPosition));
+            } while (!IsPlaceFree(NewPosition));
             return NewPosition;
         }
 
         private bool IsPlaceFree((int i, int j) newPosition) =>
-            HiddenField1[newPosition.i, newPosition.j] == CellSymbol.EmptySymbol || 
-            (HiddenField2[newPosition.i, newPosition.j] == CellSymbol.EmptySymbol && !IsFirstPlayerMove);
+            IsCellEmpty(newPosition, HiddenField2) || (IsCellEmpty(newPosition, HiddenField1) && !IsFirstPlayerMove);
 
-        private (int, int) GetRandomPosition()
+        private bool IsCellEmpty((int i, int j) CellPosition, char[,] Field) =>
+            Field[CellPosition.i, CellPosition.j] == CellSymbol.EmptySymbol;
+
+        private (int, int) GetNewRandomPosition()
         {
-            return (0, 0);
+            (int, int) NewPosition;
+            do
+            {
+                NewPosition = GetRandomPosition();
+            } while (!IsPlaceFree(NewPosition));
+            return NewPosition;
+        }
+
+        private (int, int) GetRandomPosition() =>
+            (random.Next(0, Field.FieldSize.i), random.Next(Field.FieldSize.i));
+
+        private void Move((int i, int j) NewCellPosition)
+        {
+            if (IsFirstPlayerMove)
+                Field.TryBringDownShip(NewCellPosition, ref OpenField2, ref HiddenField2);
+            else
+                Field.TryBringDownShip(NewCellPosition, ref OpenField1, ref HiddenField1);
         }
     }
 }

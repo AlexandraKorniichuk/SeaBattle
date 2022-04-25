@@ -16,15 +16,21 @@ namespace SeaBattle
         }
 
         private static (int, int) GetCurrentPosition() =>
-            (Console.CursorLeft, Console.CursorTop);
+            (Console.CursorTop, Console.CursorLeft);
 
         private static bool CanCursorMove((int i, int j) NewPosition) => 
             NewPosition.i < Field.FieldSize.i && NewPosition.j < Field.FieldSize.j && NewPosition.i >= 0 && NewPosition.j >= 0;
 
         private static void Move((int i, int j) NewPosition)
         {
-            Console.CursorLeft = NewPosition.i;
-            Console.CursorTop = NewPosition.j;
+            Console.CursorTop = NewPosition.i;
+            Console.CursorLeft = NewPosition.j;
+        }
+
+        public static void SetCursorPosition()
+        {
+            Console.CursorLeft = 0;
+            Console.CursorTop = 0;
         }
     }
 }

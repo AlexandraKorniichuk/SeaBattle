@@ -4,7 +4,7 @@ namespace SeaBattle
 {
     public class InputController
     {
-        public static void InputCell()
+        public static void MoveCursor()
         {
             ConsoleKey inputKey;
             do
@@ -20,7 +20,7 @@ namespace SeaBattle
             do
             {
                 inputKey = Console.ReadKey(true).Key;
-            } while (inputKey != ConsoleKey.D1);
+            } while (inputKey != ConsoleKey.D1 && inputKey != ConsoleKey.D2 && inputKey != ConsoleKey.D3);
             return inputKey;
         }
 

@@ -13,23 +13,23 @@ namespace SeaBattle
         }
 
         public static (int, int) GetCursorPosition() => 
-            (Console.CursorLeft, Console.CursorLeft);
+            (Console.CursorTop, Console.CursorLeft);
 
         public static (int, int) GetDirection(string directionString)
         {
             int i = 0, j = 0;
             if (directionString == "UpArrow")
-                i = -1;
-            else if (directionString == "DownArrow")
-                i = 1;
-            else if (directionString == "RightArrow")
-                j = 1;
-            else if (directionString == "LeftArrow")
                 j = -1;
+            else if (directionString == "DownArrow")
+                j = 1;
+            else if (directionString == "RightArrow")
+                i = 1;
+            else if (directionString == "LeftArrow")
+                i = -1;
             return (i, j);
         }
 
         public static (int, int) GetNewPosition((int i, int j) OldPosition, (int i, int j) direction) =>
-            (OldPosition.i + direction.i, OldPosition.j + direction.j);
+            (OldPosition.i + direction.j, OldPosition.j + direction.i);
     }
 }
