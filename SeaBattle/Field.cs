@@ -8,7 +8,7 @@ namespace SeaBattle
         public static int ShipCount = 20;
 
         private Random rand = new Random();
-        public char[,] CreateOpenField()
+        public char[,] CreateOpenedField()
         {
             (int i, int j)[] ShipsPositions = GetShipPositions();
 

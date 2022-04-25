@@ -4,8 +4,8 @@ namespace SeaBattle
 {
     public class Game
     {
-        private char[,] OpenField1;
-        private char[,] OpenField2;
+        private char[,] OpenedField1;
+        private char[,] OpenedField2;
         private char[,] HiddenField1;
         private char[,] HiddenField2;
         private Field field;
@@ -71,35 +71,35 @@ namespace SeaBattle
 
         private void CreateFields()
         {
-            OpenField1 = field.CreateOpenField();
-            OpenField2 = field.CreateOpenField();
+            OpenedField1 = field.CreateOpenedField();
+            OpenedField2 = field.CreateOpenedField();
             HiddenField1 = field.CreateEmptyField();
             HiddenField2 = field.CreateEmptyField();
         }
 
         private void DrawFields()
         {
-            field.DrawField(DefineDrawingField(OpenField1, HiddenField2, HiddenField1));
+            field.DrawField(DefineDrawingField(OpenedField1, HiddenField2, HiddenField1));
             Console.WriteLine();
-            field.DrawField(DefineDrawingField(OpenField2, OpenField1, OpenField2));
+            field.DrawField(DefineDrawingField(OpenedField2, OpenedField1, OpenedField2));
         }
 
-        private char[,] DefineDrawingField(char[,] openField, char[,] field1, char[,] field2)
+        private char[,] DefineDrawingField(char[,] openedField, char[,] field1, char[,] field2)
         {
-            if (IsFirstFieldOpen())
+            if (IsFieldOpen())
             {
-                return openField;
+                return openedField;
             }
             else
             {
-                if (IsFirstPlayerMove)
-                    return field1;
-                else
+                if (!IsFirstPlayerMove && IsTheHumanMove())
                     return field2;
+                else
+                    return field1;
             }
         }
 
-        private bool IsFirstFieldOpen() =>
+        private bool IsFieldOpen() =>
             GameType == GameType3;
 
         private bool IsTheHumanMove() =>
@@ -150,42 +150,42 @@ namespace SeaBattle
         private bool WillShipDrown()
         {
             if (IsFirstPlayerMove)
-                return IsShipShotDown(OpenField2);
+                return IsShipShotDown(OpenedField2);
             else
-                return IsShipShotDown(OpenField1);
+                return IsShipShotDown(OpenedField1);
         }
 
-        private bool IsShipShotDown(char[,] OpenField) =>
-            Field.IsCellPositionShip(NewCellPosition, OpenField);
+        private bool IsShipShotDown(char[,] OpenedField) =>
+            Field.IsCellPositionShip(NewCellPosition, OpenedField);
 
         private void Move(bool WillShipDrown)
         {
             if (WillShipDrown)
             {
                 if (IsFirstPlayerMove)
-                    BringDownShip(ref OpenField2, ref HiddenField2, ref FirstPlayerHitsAmount);
+                    BringDownShip(ref OpenedField2, ref HiddenField2, ref FirstPlayerHitsAmount);
                 else
-                    BringDownShip(ref OpenField1, ref HiddenField1, ref SecondPlayerHitsAmount);
+                    BringDownShip(ref OpenedField1, ref HiddenField1, ref SecondPlayerHitsAmount);
             }
             else
             {
                 if (IsFirstPlayerMove)
-                    GotIntoEmpty(ref OpenField2, ref HiddenField2);
+                    GotIntoEmpty(ref OpenedField2, ref HiddenField2);
                 else
-                    GotIntoEmpty(ref OpenField1, ref HiddenField1);
+                    GotIntoEmpty(ref OpenedField1, ref HiddenField1);
             }
         }
 
-        private void BringDownShip(ref char[,] openField, ref char[,] hiddenField, ref int hitsAmount)
+        private void BringDownShip(ref char[,] openedField, ref char[,] hiddenField, ref int hitsAmount)
         {
             hitsAmount++;
-            openField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitInShipSymbol;
+            openedField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitInShipSymbol;
             hiddenField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitInShipSymbol;
         }
 
-        private void GotIntoEmpty(ref char[,] openField, ref char[,] hiddenField)
+        private void GotIntoEmpty(ref char[,] openedField, ref char[,] hiddenField)
         {
-            openField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitOutEmptySymbol;
+            openedField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitOutEmptySymbol;
             hiddenField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitOutEmptySymbol;
         }
 
