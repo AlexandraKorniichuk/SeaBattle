@@ -86,8 +86,5 @@ namespace SeaBattle
             }
                 
         }
-
-        public static bool IsCellPositionShip((int i, int j) newCellPosition, char[,] openField) =>
-            openField[newCellPosition.i, newCellPosition.j] == CellSymbol.ShipSymbol;
     }
 }

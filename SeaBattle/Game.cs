@@ -112,7 +112,7 @@ namespace SeaBattle
                 SelectedCell = InputCell();
             else
                 SelectedCell = GetNewRandomPosition();
-                
+
             return SelectedCell;
         }
 
@@ -156,41 +156,49 @@ namespace SeaBattle
         }
 
         private bool IsShipShotDown(char[,] OpenedField) =>
-            Field.IsCellPositionShip(NewCellPosition, OpenedField);
+            IsCellPositionShip(NewCellPosition, OpenedField);
+
+        private bool IsCellPositionShip((int i, int j) newCellPosition, char[,] openField) =>
+            openField[newCellPosition.i, newCellPosition.j] == CellSymbol.ShipSymbol;
 
         private void Move(bool WillShipDrown)
         {
             if (WillShipDrown)
+                BringDownShip();
+            else
+                GotIntoEmpty();
+        }
+
+        private void BringDownShip()
+        {
+            if (IsFirstPlayerMove)
             {
-                if (IsFirstPlayerMove)
-                    BringDownShip(ref OpenedField2, ref HiddenField2, ref FirstPlayerHitsAmount);
-                else
-                    BringDownShip(ref OpenedField1, ref HiddenField1, ref SecondPlayerHitsAmount);
+                TakeAshot(ref OpenedField2, ref HiddenField2, CellSymbol.HitInShipSymbol);
+                FirstPlayerHitsAmount++;
             }
             else
             {
-                if (IsFirstPlayerMove)
-                    GotIntoEmpty(ref OpenedField2, ref HiddenField2);
-                else
-                    GotIntoEmpty(ref OpenedField1, ref HiddenField1);
+                TakeAshot(ref OpenedField1, ref HiddenField1, CellSymbol.HitInShipSymbol);
+                SecondPlayerHitsAmount++;
             }
         }
 
-        private void BringDownShip(ref char[,] openedField, ref char[,] hiddenField, ref int hitsAmount)
+        private void GotIntoEmpty()
         {
-            hitsAmount++;
-            openedField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitInShipSymbol;
-            hiddenField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitInShipSymbol;
+            if (IsFirstPlayerMove)
+                TakeAshot(ref OpenedField2, ref HiddenField2, CellSymbol.HitOutEmptySymbol);
+            else
+                TakeAshot(ref OpenedField1, ref HiddenField1, CellSymbol.HitOutEmptySymbol);
         }
 
-        private void GotIntoEmpty(ref char[,] openedField, ref char[,] hiddenField)
+        private void TakeAshot(ref char[,] openedField, ref char[,] hiddenField, char symbol)
         {
-            openedField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitOutEmptySymbol;
-            hiddenField[NewCellPosition.i, NewCellPosition.j] = CellSymbol.HitOutEmptySymbol;
+            openedField[NewCellPosition.i, NewCellPosition.j] = symbol;
+            hiddenField[NewCellPosition.i, NewCellPosition.j] = symbol;
         }
 
         private bool IsEndRound() =>
-            IsPlayerWin(FirstPlayerHitsAmount) || IsPlayerWin(SecondPlayerHitsAmount);
+        IsPlayerWin(FirstPlayerHitsAmount) || IsPlayerWin(SecondPlayerHitsAmount);
 
         private bool IsPlayerWin(int PlayerHitsAmount) =>
             PlayerHitsAmount == Field.ShipCount;
