@@ -123,7 +123,7 @@ namespace SeaBattle
             do
             {
                 InputController.MoveCursor();
-                NewPosition = Converting.GetCursorPosition();
+                NewPosition = Cursor.GetCursorPosition();
             } while (!IsPlaceFree(NewPosition));
             return NewPosition;
         }

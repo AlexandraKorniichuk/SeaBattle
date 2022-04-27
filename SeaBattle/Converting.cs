@@ -12,9 +12,6 @@ namespace SeaBattle
             return 0;
         }
 
-        public static (int, int) GetCursorPosition() => 
-            (Console.CursorTop, Console.CursorLeft);
-
         public static (int, int) GetDirection(string directionString)
         {
             int i = 0, j = 0;

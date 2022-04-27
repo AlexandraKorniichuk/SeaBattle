@@ -9,13 +9,13 @@ namespace SeaBattle
             (int, int) direction = Converting.GetDirection(inputKey.ToString());
             if (direction == (0, 0)) return;
 
-            (int, int) newPosition = Converting.GetNewPosition(GetCurrentPosition(), direction);
+            (int, int) newPosition = Converting.GetNewPosition(GetCursorPosition(), direction);
 
             if (CanCursorMove(newPosition))
                 Move(newPosition);
         }
 
-        private static (int, int) GetCurrentPosition() =>
+        public static (int, int) GetCursorPosition() =>
             (Console.CursorTop, Console.CursorLeft);
 
         private static bool CanCursorMove((int i, int j) NewPosition) => 
