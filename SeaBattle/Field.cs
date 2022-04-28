@@ -6,8 +6,6 @@ namespace SeaBattle
     {
         public static (int i, int j) FieldSize = (10, 10);
         public static int ShipCount = 20;
-
-        private Random rand = new Random();
         public char[,] CreateOpenedField()
         {
             (int i, int j)[] ShipsPositions = GetShipPositions();
@@ -43,18 +41,15 @@ namespace SeaBattle
 
             for(int i = 0; i < ShipsPositions.Length; i++)
             {
-                ShipsPositions[i] = GetRandomPostion();
+                ShipsPositions[i] = Converting.GetRandomPosition();
                 for (int j = i - 1; j >= 0; j--)
                 {
                     while (ShipsPositions[i] == ShipsPositions[j])
-                        ShipsPositions[i] = GetRandomPostion();
+                        ShipsPositions[i] = Converting.GetRandomPosition();
                 }
             }
             return ShipsPositions;
         }
-
-        private (int i, int j) GetRandomPostion() =>
-            (rand.Next(0, FieldSize.i), rand.Next(0, FieldSize.j));
 
         private bool IsCellShip((int i, int j)[] ShipsPositions, (int i, int j) CurrentCell)
         {
@@ -84,7 +79,9 @@ namespace SeaBattle
                 }
                 Console.WriteLine();
             }
-                
         }
+
+        public static bool IsPositionInsideField((int i, int j) NewPosition) =>
+            NewPosition.i < FieldSize.i && NewPosition.j < FieldSize.j && NewPosition.i >= 0 && NewPosition.j >= 0;
     }
 }

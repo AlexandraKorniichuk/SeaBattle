@@ -19,7 +19,6 @@ namespace SeaBattle
         private int FirstPlayerHitsAmount = 0;
         private int SecondPlayerHitsAmount = 0;
 
-        private Random random = new Random();
         public void StartNewRound(GameType gameType)
         {
             GameType = gameType;
@@ -136,13 +135,10 @@ namespace SeaBattle
             (int, int) NewPosition;
             do
             {
-                NewPosition = GetRandomPosition();
+                NewPosition = Converting.GetRandomPosition();
             } while (!IsPlaceFree(NewPosition));
             return NewPosition;
         }
-
-        private (int, int) GetRandomPosition() =>
-            (random.Next(0, Field.FieldSize.i), random.Next(Field.FieldSize.i));
 
         private bool WillShipDrown()
         {

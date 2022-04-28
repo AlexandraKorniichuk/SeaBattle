@@ -18,8 +18,8 @@ namespace SeaBattle
         public static (int, int) GetCutsorPosition() =>
             (Console.CursorTop, Console.CursorLeft);
 
-        private static bool CanCursorMove((int i, int j) NewPosition) => 
-            NewPosition.i < Field.FieldSize.i && NewPosition.j < Field.FieldSize.j && NewPosition.i >= 0 && NewPosition.j >= 0;
+        private static bool CanCursorMove((int i, int j) NewPosition) =>
+            Field.IsPositionInsideField(NewPosition);
 
         private static void Move((int i, int j) NewPosition)
         {
