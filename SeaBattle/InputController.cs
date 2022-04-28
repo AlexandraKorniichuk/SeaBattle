@@ -7,10 +7,11 @@ namespace SeaBattle
         public static void MoveCursor()
         {
             ConsoleKey inputKey;
+            Cursor cursor = new Cursor();
             do
             {
                 inputKey = Console.ReadKey(true).Key;
-                Cursor.MoveCursorIfCan(inputKey);
+                cursor.MoveCursorIfCan(inputKey);
             } while (inputKey != ConsoleKey.Enter);
         }
 

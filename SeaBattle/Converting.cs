@@ -28,11 +28,10 @@ namespace SeaBattle
 
         public static (int, int) GetNewPosition((int i, int j) OldPosition, (int i, int j) direction) =>
             (OldPosition.i + direction.j, OldPosition.j + direction.i);
+       
+        static Random rand = new Random();
 
-        public static (int i, int j) GetRandomPosition()
-        {
-            Random rand = new Random();
-            return (rand.Next(0, Field.FieldSize.i), rand.Next(0, Field.FieldSize.j));
-        }
+        public static (int i, int j) GetRandomPosition() => 
+            (rand.Next(0, Field.FieldSize.i), rand.Next(0, Field.FieldSize.j));
     }
 }

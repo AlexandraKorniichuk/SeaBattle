@@ -22,7 +22,7 @@ namespace SeaBattle
         public void StartNewRound(GameType gameType)
         {
             GameType = gameType;
-
+            //GamePlayer g = new GamePlayer();
             field = new Field();
             CreateFields();
 
@@ -119,7 +119,7 @@ namespace SeaBattle
             do
             {
                 InputController.MoveCursor();
-                NewPosition = Cursor.GetCutsorPosition();
+                NewPosition = Cursor.GetCursorPosition();
             } while (!IsPlaceFree(NewPosition));
             return NewPosition;
         }
