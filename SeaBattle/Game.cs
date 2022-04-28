@@ -4,10 +4,11 @@ namespace SeaBattle
 {
     public class Game
     {
-        private char[,] OpenedField1;
-        private char[,] OpenedField2;
-        private char[,] HiddenField1;
-        private char[,] HiddenField2;
+        private GamePlayer Player1;
+        private GamePlayer Player2;
+        private GamePlayer CurrentPlayer;
+        private GamePlayer NotCurrentPlayer;
+
         private Field field;
         private (int i, int j) NewCellPosition;
 
@@ -16,26 +17,26 @@ namespace SeaBattle
         private bool IsFirstPlayerMove;
         public static bool IsFirstPlayerWin;
 
-        private int FirstPlayerHitsAmount = 0;
-        private int SecondPlayerHitsAmount = 0;
-
         public void StartNewRound(GameType gameType)
         {
             GameType = gameType;
-            //GamePlayer g = new GamePlayer();
+
+            Player1 = new GamePlayer();
+            Player2 = new GamePlayer();
+
             field = new Field();
-            CreateFields();
 
             IsFirstPlayerMove = true;
 
             GameLoop();
-            IsFirstPlayerWin = IsPlayerWin(FirstPlayerHitsAmount);
+            IsFirstPlayerWin = IsPlayerWin(Player1.HitsAmount);
         }
 
         private void GameLoop()
         {
             do
             {
+                GetPlayers();
                 DrawFields();
                 WriteWhosMove();
 
@@ -61,42 +62,55 @@ namespace SeaBattle
                 Console.ReadKey();
                 Console.Clear();
 
+                SetPlayers();
                 IsFirstPlayerMove = !IsFirstPlayerMove;
             } while (!IsEndRound());
         }
 
-        private void CreateFields()
+        private void GetPlayers()
         {
-            OpenedField1 = field.CreateOpenedField();
-            OpenedField2 = field.CreateOpenedField();
-            HiddenField1 = field.CreateEmptyField();
-            HiddenField2 = field.CreateEmptyField();
+            if (IsFirstPlayerMove)
+            {
+                CurrentPlayer = Player1;
+                NotCurrentPlayer = Player2;
+            }
+            else
+            {
+                CurrentPlayer = Player2;
+                NotCurrentPlayer = Player1;
+            }
+        }
+
+        private void SetPlayers()
+        {
+            if (IsFirstPlayerMove)
+            {
+                Player1 = CurrentPlayer;
+                Player2 = NotCurrentPlayer;
+            }
+            else
+            {
+                Player2 = CurrentPlayer;
+                Player1 = NotCurrentPlayer;
+            }
         }
 
         private void DrawFields()
         {
-            field.DrawField(DefineDrawingField(OpenedField1, HiddenField2, HiddenField1));
+            field.DrawField(DefineDrawingField(NotCurrentPlayer.HiddenField, Player2.HiddenField, Player1.OpenedField));
             Console.WriteLine();
-            field.DrawField(DefineDrawingField(OpenedField2, OpenedField1, OpenedField2));
+            field.DrawField(DefineDrawingField(CurrentPlayer.OpenedField, Player1.OpenedField, Player2.OpenedField));
         }
 
-        private char[,] DefineDrawingField(char[,] openedField, char[,] field1, char[,] field2)
+        private char[,] DefineDrawingField(char[,] humanField, char[,] botOrHumanField, char[,] botField)
         {
-            if (IsFieldOpen())
-            {
-                return openedField;
-            }
+            if (GameType == GameType.HumanvsHuman)
+                return humanField;
+            else if (GameType == GameType.HumanvsBot)
+                return botOrHumanField;
             else
-            {
-                if (!IsFirstPlayerMove && IsTheHumanMove())
-                    return field2;
-                else
-                    return field1;
-            }
+                return botField;
         }
-
-        private bool IsFieldOpen() =>
-            GameType == GameType.BotvsBot;
 
         private bool IsTheHumanMove() =>
             GameType == GameType.HumanvsHuman || (GameType == GameType.HumanvsBot && IsFirstPlayerMove);
@@ -125,7 +139,7 @@ namespace SeaBattle
         }
 
         private bool IsPlaceFree((int i, int j) newPosition) =>
-            IsCellEmpty(newPosition, HiddenField2) || (IsCellEmpty(newPosition, HiddenField1) && !IsFirstPlayerMove);
+            IsCellEmpty(newPosition, NotCurrentPlayer.HiddenField);
 
         private bool IsCellEmpty((int i, int j) CellPosition, char[,] Field) =>
             Field[CellPosition.i, CellPosition.j] == CellSymbol.EmptySymbol;
@@ -140,13 +154,8 @@ namespace SeaBattle
             return NewPosition;
         }
 
-        private bool WillShipDrown()
-        {
-            if (IsFirstPlayerMove)
-                return IsShipShotDown(OpenedField2);
-            else
-                return IsShipShotDown(OpenedField1);
-        }
+        private bool WillShipDrown() =>
+            IsShipShotDown(NotCurrentPlayer.OpenedField);
 
         private bool IsShipShotDown(char[,] OpenedField) =>
             IsCellPositionShip(NewCellPosition, OpenedField);
@@ -157,41 +166,24 @@ namespace SeaBattle
         private void Move(bool WillShipDrown)
         {
             if (WillShipDrown)
-                BringDownShip();
-            else
-                GotIntoEmpty();
-        }
-
-        private void BringDownShip()
-        {
-            if (IsFirstPlayerMove)
             {
-                TakeAshot(ref OpenedField2, ref HiddenField2, CellSymbol.HitInShipSymbol);
-                FirstPlayerHitsAmount++;
+                CurrentPlayer.HitsAmount++;
+                TakeAshot(ref NotCurrentPlayer, CellSymbol.HitInShipSymbol);
             }
             else
             {
-                TakeAshot(ref OpenedField1, ref HiddenField1, CellSymbol.HitInShipSymbol);
-                SecondPlayerHitsAmount++;
+                TakeAshot(ref NotCurrentPlayer, CellSymbol.HitOutEmptySymbol);
             }
         }
 
-        private void GotIntoEmpty()
+        private void TakeAshot(ref GamePlayer Player, char symbol)
         {
-            if (IsFirstPlayerMove)
-                TakeAshot(ref OpenedField2, ref HiddenField2, CellSymbol.HitOutEmptySymbol);
-            else
-                TakeAshot(ref OpenedField1, ref HiddenField1, CellSymbol.HitOutEmptySymbol);
-        }
-
-        private void TakeAshot(ref char[,] openedField, ref char[,] hiddenField, char symbol)
-        {
-            openedField[NewCellPosition.i, NewCellPosition.j] = symbol;
-            hiddenField[NewCellPosition.i, NewCellPosition.j] = symbol;
+            Player.OpenedField[NewCellPosition.i, NewCellPosition.j] = symbol;
+            Player.HiddenField[NewCellPosition.i, NewCellPosition.j] = symbol;
         }
 
         private bool IsEndRound() =>
-        IsPlayerWin(FirstPlayerHitsAmount) || IsPlayerWin(SecondPlayerHitsAmount);
+            IsPlayerWin(CurrentPlayer.HitsAmount);
 
         private bool IsPlayerWin(int PlayerHitsAmount) =>
             PlayerHitsAmount == Field.ShipCount;
