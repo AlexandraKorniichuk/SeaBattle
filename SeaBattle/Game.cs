@@ -11,10 +11,7 @@ namespace SeaBattle
         private Field field;
         private (int i, int j) NewCellPosition;
 
-        public static int GameType1 = 1;
-        public static int GameType2 = 2;
-        public static int GameType3 = 3;
-        private int GameType = 1;
+        private GameType GameType;
 
         private bool IsFirstPlayerMove;
         public static bool IsFirstPlayerWin;
@@ -23,7 +20,7 @@ namespace SeaBattle
         private int SecondPlayerHitsAmount = 0;
 
         private Random random = new Random();
-        public void StartNewRound(int gameType)
+        public void StartNewRound(GameType gameType)
         {
             GameType = gameType;
 
@@ -100,10 +97,10 @@ namespace SeaBattle
         }
 
         private bool IsFieldOpen() =>
-            GameType == GameType3;
+            GameType == GameType.BotvsBot;
 
         private bool IsTheHumanMove() =>
-            GameType == GameType1 || (GameType == GameType2 && IsFirstPlayerMove);
+            GameType == GameType.HumanvsHuman || (GameType == GameType.HumanvsBot && IsFirstPlayerMove);
 
         private (int, int) GetSelectedCell()
         {
@@ -123,7 +120,7 @@ namespace SeaBattle
             do
             {
                 InputController.MoveCursor();
-                NewPosition = Cursor.GetCursorPosition();
+                NewPosition = Cursor.GetCutsorPosition();
             } while (!IsPlaceFree(NewPosition));
             return NewPosition;
         }

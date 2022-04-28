@@ -2,9 +2,16 @@
 
 namespace SeaBattle
 {
+    public enum GameType
+    {
+        HumanvsHuman,
+        HumanvsBot,
+        BotvsBot
+    }
+
     public class Lobby
     {
-        public int GameType = 1;
+        public GameType GameType;
         public bool IsEndGame = true;
         private ConsoleKey PlayAgainKey = ConsoleKey.Spacebar;
         public void OpenLobby()
@@ -34,7 +41,7 @@ namespace SeaBattle
             Console.WriteLine("3. Soon");
         }
 
-        private int GetInputGameTypeKey() =>
+        private GameType GetInputGameTypeKey() =>
             Converting.GetInputKey(InputController.InputKey());
 
         private void SetConsoleSettings() =>

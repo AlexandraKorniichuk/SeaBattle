@@ -4,12 +4,12 @@ namespace SeaBattle
 {
     public class Converting
     {
-        public static int GetInputKey(ConsoleKey inputKey)
+        public static GameType GetInputKey(ConsoleKey inputKey)
         {
-            if (inputKey == ConsoleKey.D1) return Game.GameType1;
-            if (inputKey == ConsoleKey.D2) return Game.GameType2;
-            if (inputKey == ConsoleKey.D3) return Game.GameType3;
-            return 0;
+            if (inputKey == ConsoleKey.D1) return GameType.HumanvsHuman;
+            if (inputKey == ConsoleKey.D2) return GameType.HumanvsBot;
+            if (inputKey == ConsoleKey.D3) return GameType.BotvsBot;
+            return GameType.HumanvsHuman;
         }
 
         public static (int, int) GetDirection(string directionString)
