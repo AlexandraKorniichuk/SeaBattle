@@ -153,18 +153,12 @@ namespace SeaBattle
             if (WillShipDrown)
             {
                 CurrentPlayer.HitsAmount++;
-                TakeAshot(ref NotCurrentPlayer, CellSymbol.HitInShipSymbol);
+                NotCurrentPlayer = NotCurrentPlayer.TakeAShot(CellSymbol.HitInShipSymbol, NewCellPosition);
             }
             else
             {
-                TakeAshot(ref NotCurrentPlayer, CellSymbol.HitOutEmptySymbol);
+                NotCurrentPlayer = NotCurrentPlayer.TakeAShot(CellSymbol.HitOutEmptySymbol, NewCellPosition);
             }
-        }
-
-        private void TakeAshot(ref GamePlayer Player, char symbol)
-        {
-            Player.OpenedField[NewCellPosition.i, NewCellPosition.j] = symbol;
-            Player.HiddenField[NewCellPosition.i, NewCellPosition.j] = symbol;
         }
 
         private bool IsEndRound() =>
