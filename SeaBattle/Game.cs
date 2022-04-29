@@ -67,33 +67,14 @@ namespace SeaBattle
             } while (!IsEndRound());
         }
 
-        private void GetPlayers()
-        {
-            if (IsFirstPlayerMove)
-            {
-                CurrentPlayer = Player1;
-                NotCurrentPlayer = Player2;
-            }
-            else
-            {
-                CurrentPlayer = Player2;
-                NotCurrentPlayer = Player1;
-            }
-        }
+        private void GetPlayers() =>
+            (CurrentPlayer, NotCurrentPlayer) = DefinePlayers(Player1, Player2);
 
-        private void SetPlayers()
-        {
-            if (IsFirstPlayerMove)
-            {
-                Player1 = CurrentPlayer;
-                Player2 = NotCurrentPlayer;
-            }
-            else
-            {
-                Player2 = CurrentPlayer;
-                Player1 = NotCurrentPlayer;
-            }
-        }
+        private void SetPlayers() =>
+            (Player1, Player2) = DefinePlayers(CurrentPlayer, NotCurrentPlayer);
+
+        private (GamePlayer, GamePlayer) DefinePlayers(GamePlayer Player1, GamePlayer Player2) =>
+            (IsFirstPlayerMove ? Player1 : Player2, !IsFirstPlayerMove ? Player1 : Player2);
 
         private void DrawFields()
         {
