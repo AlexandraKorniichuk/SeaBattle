@@ -37,8 +37,7 @@ namespace SeaBattle
             do
             {
                 GetPlayers();
-                DrawFields();
-                WriteWhosMove();
+                Draw();
 
                 NewCellPosition = GetSelectedCell();
 
@@ -56,8 +55,7 @@ namespace SeaBattle
 
                 Console.Clear();
 
-                DrawFields();
-                WriteWhosMove();
+                Draw();
 
                 Console.ReadKey();
                 Console.Clear();
@@ -75,6 +73,12 @@ namespace SeaBattle
 
         private (GamePlayer, GamePlayer) DefinePlayers(GamePlayer Player1, GamePlayer Player2) =>
             (IsFirstPlayerMove ? Player1 : Player2, !IsFirstPlayerMove ? Player1 : Player2);
+
+        private void Draw()
+        {
+            DrawFields();
+            WriteWhosMove();
+        }
 
         private void DrawFields()
         {
