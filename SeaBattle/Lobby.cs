@@ -11,15 +11,17 @@ namespace SeaBattle
 
     public class Lobby
     {
-        public GameType GameType;
         public bool IsEndGame = true;
         private ConsoleKey PlayAgainKey = ConsoleKey.Spacebar;
         public void OpenLobby()
         {
             ShowGreating();
-            GameType = GetInputGameTypeKey();
+            GameType gameType = GetInputGameTypeKey();
             Console.Clear();
             SetConsoleSettings();
+
+            Game game = new Game();
+            game.StartNewRound(gameType);
         }
 
         private void ShowGreating()

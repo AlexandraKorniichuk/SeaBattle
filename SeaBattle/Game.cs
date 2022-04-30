@@ -36,43 +36,43 @@ namespace SeaBattle
         {
             do
             {
-                GetPlayers();
+                SetUpPlayers();
                 Draw();
 
                 NewCellPosition = GetSelectedCell();
 
                 bool willShipDrown = WillShipDrown();
-                if (willShipDrown)
-                {
-                    Move(WillShipDrown: willShipDrown);
-                    Console.Clear();
-                    continue;
-                }
-                else
-                {
-                    Move(WillShipDrown: willShipDrown);
-                }
+                Move(willShipDrown);
 
-                Console.Clear();
+                ShowNewMove();
 
-                Draw();
-
-                Console.ReadKey();
-                Console.Clear();
-
-                SetPlayers();
-                IsFirstPlayerMove = !IsFirstPlayerMove;
+                if (!willShipDrown)
+                    SwithMove();
             } while (!IsEndRound());
         }
 
-        private void GetPlayers() =>
+        private void SetUpPlayers() =>
             (CurrentPlayer, NotCurrentPlayer) = DefinePlayers(Player1, Player2);
 
-        private void SetPlayers() =>
+        private void SetUpGamePlayers() =>
             (Player1, Player2) = DefinePlayers(CurrentPlayer, NotCurrentPlayer);
 
         private (GamePlayer, GamePlayer) DefinePlayers(GamePlayer Player1, GamePlayer Player2) =>
             (IsFirstPlayerMove ? Player1 : Player2, !IsFirstPlayerMove ? Player1 : Player2);
+
+        private void SwithMove()
+        {
+            SetUpGamePlayers();
+            IsFirstPlayerMove = !IsFirstPlayerMove;
+        }
+
+        private void ShowNewMove()
+        {
+            Console.Clear();
+            Draw();
+            Console.ReadKey();
+            Console.Clear();
+        }
 
         private void Draw()
         {

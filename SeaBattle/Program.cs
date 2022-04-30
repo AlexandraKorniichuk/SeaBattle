@@ -9,18 +9,13 @@ namespace SeaBattle
             Lobby lobby = new Lobby();
             lobby.OpenLobby();
 
-            Game game = new Game();
-            game.StartNewRound(lobby.GameType);
             lobby.EndRound(); 
 
             //for later
             //do
             //{
             //    lobby.OpenLobby();
-            //    Game game = new Game();
-            //    game.StartNewRound(lobby.GameType);
-
-            //    //lobby.EndRound();
+            //    lobby.EndRound();
             //} while (!lobby.IsEndGame);
             Console.ReadKey();
         }
