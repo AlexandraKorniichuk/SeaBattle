@@ -83,5 +83,8 @@ namespace SeaBattle
 
         public static bool IsPositionInsideField((int i, int j) NewPosition) =>
             NewPosition.i < FieldSize.i && NewPosition.j < FieldSize.j && NewPosition.i >= 0 && NewPosition.j >= 0;
+
+        public bool IsCellEmpty((int i, int j) CellPosition, char[,] Field) =>
+            Field[CellPosition.i, CellPosition.j] == CellSymbol.EmptySymbol;
     }
 }

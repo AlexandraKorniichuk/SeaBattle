@@ -36,7 +36,7 @@ namespace SeaBattle
         {
             do
             {
-                SetUpPlayers();
+                SetUpMovePlayers();
                 Draw();
 
                 NewCellPosition = GetSelectedCell();
@@ -51,14 +51,14 @@ namespace SeaBattle
             } while (!IsEndRound());
         }
 
-        private void SetUpPlayers() =>
+        private void SetUpMovePlayers() =>
             (CurrentPlayer, NotCurrentPlayer) = DefinePlayers(Player1, Player2);
 
         private void SetUpGamePlayers() =>
             (Player1, Player2) = DefinePlayers(CurrentPlayer, NotCurrentPlayer);
 
         private (GamePlayer, GamePlayer) DefinePlayers(GamePlayer Player1, GamePlayer Player2) =>
-            (IsFirstPlayerMove ? Player1 : Player2, !IsFirstPlayerMove ? Player1 : Player2);
+            (IsFirstPlayerMove ? (Player1, Player2) : (Player2, Player1));
 
         private void SwithMove()
         {
@@ -102,13 +102,10 @@ namespace SeaBattle
 
         private (int, int) GetSelectedCell()
         {
-            (int, int) SelectedCell;
             if (IsTheHumanMove())
-                SelectedCell = InputCell();
+                return InputCell();
             else
-                SelectedCell = GetNewRandomPosition();
-
-            return SelectedCell;
+                return GetNewRandomPosition();
         }
 
         private (int, int) InputCell()
@@ -124,10 +121,7 @@ namespace SeaBattle
         }
 
         private bool IsPlaceFree((int i, int j) newPosition) =>
-            IsCellEmpty(newPosition, NotCurrentPlayer.HiddenField);
-
-        private bool IsCellEmpty((int i, int j) CellPosition, char[,] Field) =>
-            Field[CellPosition.i, CellPosition.j] == CellSymbol.EmptySymbol;
+            field.IsCellEmpty(newPosition, NotCurrentPlayer.HiddenField);
 
         private (int, int) GetNewRandomPosition()
         {
