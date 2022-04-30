@@ -38,16 +38,14 @@ namespace SeaBattle
             {
                 SetUpMovePlayers();
                 Draw();
-
-                NewCellPosition = GetSelectedCell();
+                Input();
 
                 bool willShipDrown = WillShipDrown();
                 Move(willShipDrown);
 
                 ShowNewMove();
 
-                if (!willShipDrown)
-                    SwithMove();
+                EndMove(isSwithingMove: !willShipDrown);
             } while (!IsEndRound());
         }
 
@@ -60,10 +58,13 @@ namespace SeaBattle
         private (GamePlayer, GamePlayer) DefinePlayers(GamePlayer Player1, GamePlayer Player2) =>
             (IsFirstPlayerMove ? (Player1, Player2) : (Player2, Player1));
 
-        private void SwithMove()
+        private void EndMove(bool isSwithingMove)
         {
-            SetUpGamePlayers();
-            IsFirstPlayerMove = !IsFirstPlayerMove;
+            if (isSwithingMove)
+            {
+                SetUpGamePlayers();
+                IsFirstPlayerMove = !IsFirstPlayerMove;
+            }
         }
 
         private void ShowNewMove()
@@ -99,6 +100,9 @@ namespace SeaBattle
 
         private bool IsTheHumanMove() =>
             GameType == GameType.HumanvsHuman || (GameType == GameType.HumanvsBot && IsFirstPlayerMove);
+
+        private void Input() =>
+            NewCellPosition = GetSelectedCell();
 
         private (int, int) GetSelectedCell()
         {
