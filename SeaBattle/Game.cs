@@ -151,14 +151,10 @@ namespace SeaBattle
         private void Move(bool WillShipDrown)
         {
             if (WillShipDrown)
-            {
                 CurrentPlayer.HitsAmount++;
-                NotCurrentPlayer = NotCurrentPlayer.TakeAShot(CellSymbol.HitInShipSymbol, NewCellPosition);
-            }
-            else
-            {
-                NotCurrentPlayer = NotCurrentPlayer.TakeAShot(CellSymbol.HitOutEmptySymbol, NewCellPosition);
-            }
+
+            char symbol = WillShipDrown ? CellSymbol.HitInShipSymbol : CellSymbol.HitOutEmptySymbol;
+            NotCurrentPlayer = NotCurrentPlayer.TakeAShot(symbol, NewCellPosition);
         }
 
         private bool IsEndRound() =>
