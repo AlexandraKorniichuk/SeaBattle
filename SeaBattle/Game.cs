@@ -36,33 +36,30 @@ namespace SeaBattle
         {
             do
             {
-                SetUpMovePlayers();
+                SetMovePlayers();
                 Draw();
                 Input();
-
-                bool willShipDrown = WillShipDrown();
-                Move(willShipDrown);
-
+                Move();
                 ShowNewMove();
-
-                EndMove(isSwithingMove: !willShipDrown);
+                EndMove();
             } while (!IsEndRound());
         }
 
-        private void SetUpMovePlayers() =>
+        private void SetMovePlayers() =>
             (CurrentPlayer, NotCurrentPlayer) = DefinePlayers(Player1, Player2);
 
-        private void SetUpGamePlayers() =>
+        private void SetGamePlayers() =>
             (Player1, Player2) = DefinePlayers(CurrentPlayer, NotCurrentPlayer);
 
         private (GamePlayer, GamePlayer) DefinePlayers(GamePlayer Player1, GamePlayer Player2) =>
             (IsFirstPlayerMove ? (Player1, Player2) : (Player2, Player1));
 
-        private void EndMove(bool isSwithingMove)
+        private void EndMove()
         {
-            if (isSwithingMove)
+            bool isMoveSwithing = WillShipDrown();
+            if (isMoveSwithing)
             {
-                SetUpGamePlayers();
+                SetGamePlayers();
                 IsFirstPlayerMove = !IsFirstPlayerMove;
             }
         }
@@ -146,12 +143,13 @@ namespace SeaBattle
         private bool IsCellPositionShip((int i, int j) newCellPosition, char[,] openField) =>
             openField[newCellPosition.i, newCellPosition.j] == CellSymbol.ShipSymbol;
 
-        private void Move(bool WillShipDrown)
+        private void Move()
         {
-            if (WillShipDrown)
+            bool willShipDrown = WillShipDrown();
+            if (willShipDrown)
                 CurrentPlayer.HitsAmount++;
 
-            char symbol = WillShipDrown ? CellSymbol.HitInShipSymbol : CellSymbol.HitOutEmptySymbol;
+            char symbol = willShipDrown ? CellSymbol.HitInShipSymbol : CellSymbol.HitOutEmptySymbol;
             NotCurrentPlayer = NotCurrentPlayer.TakeAShot(symbol, NewCellPosition);
         }
 
