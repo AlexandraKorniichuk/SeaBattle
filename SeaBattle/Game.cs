@@ -42,6 +42,7 @@ namespace SeaBattle
                 Draw();
                 Input();
                 Move();
+                ShowNewMove();
                 EndMove();
             } while (!IsEndRound());
         }
@@ -62,6 +63,14 @@ namespace SeaBattle
                 SetGamePlayers();
                 IsFirstPlayerMove = !IsFirstPlayerMove;
             }
+        }
+
+        private void ShowNewMove()
+        {
+            Console.Clear();
+            Draw();
+            Console.ReadKey();
+            Console.Clear();
         }
 
         private void Draw()
