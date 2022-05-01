@@ -17,7 +17,6 @@ namespace SeaBattle
         {
             ShowGreating();
             GameType gameType = GetInputGameTypeKey();
-            Console.Clear();
             SetConsoleSettings();
 
             Game game = new Game();

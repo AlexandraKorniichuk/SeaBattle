@@ -86,5 +86,8 @@ namespace SeaBattle
 
         public bool IsCellEmpty((int i, int j) CellPosition, char[,] Field) =>
             Field[CellPosition.i, CellPosition.j] == CellSymbol.EmptySymbol;
+
+        public bool IsCellPositionShip((int i, int j) newCellPosition, char[,] openField) =>
+            openField[newCellPosition.i, newCellPosition.j] == CellSymbol.ShipSymbol;
     }
 }

@@ -17,6 +17,8 @@ namespace SeaBattle
         private bool IsFirstPlayerMove;
         public static bool IsFirstPlayerWin;
 
+        bool willShipDrown = false;
+
         public void StartNewRound(GameType gameType)
         {
             GameType = gameType;
@@ -40,7 +42,6 @@ namespace SeaBattle
                 Draw();
                 Input();
                 Move();
-                ShowNewMove();
                 EndMove();
             } while (!IsEndRound());
         }
@@ -56,24 +57,16 @@ namespace SeaBattle
 
         private void EndMove()
         {
-            bool isMoveSwithing = WillShipDrown();
-            if (isMoveSwithing)
+            if (!willShipDrown)
             {
                 SetGamePlayers();
                 IsFirstPlayerMove = !IsFirstPlayerMove;
             }
         }
 
-        private void ShowNewMove()
-        {
-            Console.Clear();
-            Draw();
-            Console.ReadKey();
-            Console.Clear();
-        }
-
         private void Draw()
         {
+            Console.Clear();
             DrawFields();
             WriteWhosMove();
         }
@@ -135,17 +128,11 @@ namespace SeaBattle
         }
 
         private bool WillShipDrown() =>
-            IsShipShotDown(NotCurrentPlayer.OpenedField);
-
-        private bool IsShipShotDown(char[,] OpenedField) =>
-            IsCellPositionShip(NewCellPosition, OpenedField);
-
-        private bool IsCellPositionShip((int i, int j) newCellPosition, char[,] openField) =>
-            openField[newCellPosition.i, newCellPosition.j] == CellSymbol.ShipSymbol;
+            field.IsCellPositionShip(NewCellPosition, NotCurrentPlayer.OpenedField);
 
         private void Move()
         {
-            bool willShipDrown = WillShipDrown();
+            willShipDrown = WillShipDrown();
             if (willShipDrown)
                 CurrentPlayer.HitsAmount++;
 
