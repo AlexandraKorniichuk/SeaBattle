@@ -62,15 +62,23 @@ namespace SeaBattle
             {
                 SetGamePlayers();
                 IsFirstPlayerMove = !IsFirstPlayerMove;
+                WriteEndMoveMessage();
             }
+            Console.ReadKey();
+            Console.Clear();
+        }
+
+        private void WriteEndMoveMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Your move is done");
+            Console.ForegroundColor = ConsoleColor.White;
         }
 
         private void ShowNewMove()
         {
             Console.Clear();
             Draw();
-            Console.ReadKey();
-            Console.Clear();
         }
 
         private void Draw()
