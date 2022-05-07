@@ -21,10 +21,9 @@ ExportedObj/
 *.pdb
 *.opendb
 *.VC.db
-*.config
+#*.config
 
 # Builds
 *.apk
 *.unitypackage
 *.log
-Labyrinth/bin/Debug/Labyrinth.exe
