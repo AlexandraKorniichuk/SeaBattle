@@ -5,7 +5,15 @@ namespace SeaBattle
     public class Field
     {
         public static (int i, int j) FieldSize = (10, 10);
-        public static int ShipCount = 20;
+        public static int ShipCount;
+        private double ShipsPersantage = 0.2;
+
+        public Field()
+        {
+            ShipCount = (int)(FieldSize.i * FieldSize.j * ShipsPersantage);
+            if (ShipCount == 0) ShipCount = 1;
+        }
+
         public char[,] CreateOpenedField()
         {
             (int i, int j)[] ShipsPositions = GetShipPositions();
