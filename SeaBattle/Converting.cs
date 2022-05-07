@@ -33,5 +33,16 @@ namespace SeaBattle
 
         public static (int i, int j) GetRandomPosition() => 
             (rand.Next(0, Field.FieldSize.i), rand.Next(0, Field.FieldSize.j));
+
+        public static ConsoleColor GetCellColor(char cell)
+        {
+            if (cell == CellSymbol.EmptySymbol)
+                return ConsoleColor.Blue;
+            if (cell == CellSymbol.ShipSymbol)
+                return ConsoleColor.Green;
+            if (cell == CellSymbol.HitInShipSymbol)
+                return ConsoleColor.Red;
+            return ConsoleColor.White;
+        }
     }
 }

@@ -60,12 +60,15 @@ namespace SeaBattle
         private void WriteResultMessage()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            if (Game.IsFirstPlayerWin)
-                Console.WriteLine("All ships of second player have reached the bottom. First player, congratulations");
-            else
-                Console.WriteLine("All ships of first player have reached the bottom. Second player, congratulations");
+            (string WinPlayer, string LosePlayer) PlayersNames = ("First Player", "Second Player");
+            PlayersNames = PlaceNamesRight(PlayersNames);
+
+            Console.WriteLine($"All ships of {PlayersNames.LosePlayer} have reached the bottom. {PlayersNames.WinPlayer}, congratulations");
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        private (string, string) PlaceNamesRight((string Player1, string Player2) playersNames) =>
+            Game.IsFirstPlayerWin ? (playersNames.Player1, playersNames.Player2) : (playersNames.Player2, playersNames.Player1);
 
         private void WriteOfferMessage() =>
             Console.WriteLine($"If you want to play again - press '{PlayAgainKey}'");

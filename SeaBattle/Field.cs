@@ -75,12 +75,7 @@ namespace SeaBattle
             {
                 for (int j = 0; j < FieldSize.j; j++)
                 {
-                    if (Field[i, j] == CellSymbol.EmptySymbol)
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                    else if (Field[i, j] == CellSymbol.ShipSymbol)
-                        Console.ForegroundColor = ConsoleColor.Green;
-                    else if (Field[i, j] == CellSymbol.HitInShipSymbol)
-                        Console.ForegroundColor = ConsoleColor.Red;
+                    Console.ForegroundColor = Converting.GetCellColor(Field[i, j]);
 
                     Console.Write(Field[i, j]);
                     Console.ForegroundColor = ConsoleColor.White;   
