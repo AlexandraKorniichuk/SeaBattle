@@ -38,8 +38,8 @@ namespace SeaBattle
             Console.WriteLine($"Choose one type of game:");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("1. Human vs human");
-            Console.WriteLine("2. Soon");
-            Console.WriteLine("3. Soon");
+            Console.WriteLine("2. Human vs  Bot");
+            Console.WriteLine("3. Bot vs Bot");
         }
 
         private GameType GetInputGameTypeKey() =>

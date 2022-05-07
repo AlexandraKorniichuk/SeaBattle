@@ -38,6 +38,7 @@ namespace SeaBattle
         {
             do
             {
+                Game g = new Game();
                 SetMovePlayers();
                 Draw();
                 Input();
