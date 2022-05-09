@@ -15,11 +15,12 @@ namespace SeaBattle
         private GameType GameType;
 
         private bool IsFirstPlayerMove;
+        private bool DoesBotGoFirst;
         public static bool IsFirstPlayerWin;
 
         bool willShipDrown = false;
 
-        public void StartNewRound(GameType gameType)
+        public void StartNewRound(GameType gameType, bool doesBotGoFirst)
         {
             GameType = gameType;
 
@@ -28,6 +29,7 @@ namespace SeaBattle
 
             field = new Field();
 
+            DoesBotGoFirst = doesBotGoFirst;
             IsFirstPlayerMove = true;
 
             GameLoop();
@@ -71,7 +73,7 @@ namespace SeaBattle
         private void WriteEndMoveMessage()
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("Your move is done");
+            Console.WriteLine("Move is done");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -90,23 +92,52 @@ namespace SeaBattle
 
         private void DrawFields()
         {
-            field.DrawField(DefineDrawingField(NotCurrentPlayer.HiddenField, Player2.HiddenField, Player1.OpenedField));
+            char[,] WirstFieldToDraw = DefineDrawingField(NotCurrentPlayer.HiddenField, Player1.HiddenField, Player2.HiddenField, Player1.OpenedField);
+            char[,] SecondFieldToDraw = DefineDrawingField(CurrentPlayer.OpenedField, Player2.OpenedField, Player1.OpenedField, Player2.OpenedField);
+            
+            field.DrawField(WirstFieldToDraw);
             Console.WriteLine();
-            field.DrawField(DefineDrawingField(CurrentPlayer.OpenedField, Player1.OpenedField, Player2.OpenedField));
+            field.DrawField(SecondFieldToDraw);
         }
 
-        private char[,] DefineDrawingField(char[,] humanField, char[,] botOrHumanField, char[,] botField)
+        private char[,] DefineDrawingField(char[,] humanField, char[,] botOrHumanField1, char[,] botOrHumanField2, char[,] botField)
         {
             if (GameType == GameType.HumanvsHuman)
                 return humanField;
-            else if (GameType == GameType.HumanvsBot)
-                return botOrHumanField;
+            else if (GameType == GameType.HumanvsBot && DoesBotGoFirst)
+                return botOrHumanField1;
+            else if (GameType == GameType.HumanvsBot && !DoesBotGoFirst)
+                return botOrHumanField2;
             else
                 return botField;
         }
 
+        private char[,] DefineDrawingField1()
+        {
+            if (GameType == GameType.HumanvsHuman)
+                return NotCurrentPlayer.HiddenField;
+            else if (GameType == GameType.HumanvsBot && DoesBotGoFirst)
+                return Player1.HiddenField;
+            else if (GameType == GameType.HumanvsBot && !DoesBotGoFirst)
+                return Player2.HiddenField;
+            else
+                return Player1.OpenedField;
+        }
+
+        private char[,] DefineDrawingField2()
+        {
+            if (GameType == GameType.HumanvsHuman)
+                return CurrentPlayer.OpenedField;
+            else if (GameType == GameType.HumanvsBot && DoesBotGoFirst)
+                return Player2.OpenedField;
+            else if (GameType == GameType.HumanvsBot && !DoesBotGoFirst)
+                return Player1.OpenedField;
+            else
+                return Player2.OpenedField;
+        }
+
         private bool IsTheHumanMove() =>
-            GameType == GameType.HumanvsHuman || (GameType == GameType.HumanvsBot && IsFirstPlayerMove);
+            GameType == GameType.HumanvsHuman || (GameType == GameType.HumanvsBot && (IsFirstPlayerMove != DoesBotGoFirst));
 
         private void Input() =>
             NewCellPosition = GetSelectedCell();

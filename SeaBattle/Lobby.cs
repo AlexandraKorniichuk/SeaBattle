@@ -17,10 +17,11 @@ namespace SeaBattle
         {
             ShowGreating();
             GameType gameType = GetInputGameTypeKey();
+            bool doesBotGoFirst = DoesBotGoFirst(gameType);
             SetConsoleSettings();
 
             Game game = new Game();
-            game.StartNewRound(gameType);
+            game.StartNewRound(gameType, doesBotGoFirst);
         }
 
         private void ShowGreating()
@@ -35,7 +36,7 @@ namespace SeaBattle
             Console.WriteLine();
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Choose one type of game:");
+            Console.WriteLine("Choose one type of game:");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("1. Human vs human");
             Console.WriteLine("2. Human vs  Bot");
@@ -43,7 +44,25 @@ namespace SeaBattle
         }
 
         private GameType GetInputGameTypeKey() =>
-            Converting.GetInputKey(InputController.InputKey());
+            Converting.GetGameType(InputController.InputGameTypeKey());
+
+        private bool DoesBotGoFirst(GameType gameType)
+        {
+            if (gameType != GameType.HumanvsBot)
+                return true;
+            ShowOptions();
+            return Converting.GetBotMoveBool(InputController.InputBotMoveKey());
+        }
+
+        private void ShowOptions()
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Define who move first:");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("1. Human");
+            Console.WriteLine("2. Bot");
+        }
 
         private void SetConsoleSettings() =>
             Console.CursorSize = 100;
