@@ -92,10 +92,10 @@ namespace SeaBattle
 
         private void DrawFields()
         {
-            char[,] WirstFieldToDraw = DefineDrawingField(NotCurrentPlayer.HiddenField, Player1.HiddenField, Player2.HiddenField, Player1.OpenedField);
+            char[,] FirstFieldToDraw = DefineDrawingField(NotCurrentPlayer.HiddenField, Player1.HiddenField, Player2.HiddenField, Player1.OpenedField);
             char[,] SecondFieldToDraw = DefineDrawingField(CurrentPlayer.OpenedField, Player2.OpenedField, Player1.OpenedField, Player2.OpenedField);
             
-            field.DrawField(WirstFieldToDraw);
+            field.DrawField(FirstFieldToDraw);
             Console.WriteLine();
             field.DrawField(SecondFieldToDraw);
         }
@@ -110,30 +110,6 @@ namespace SeaBattle
                 return botOrHumanField2;
             else
                 return botField;
-        }
-
-        private char[,] DefineDrawingField1()
-        {
-            if (GameType == GameType.HumanvsHuman)
-                return NotCurrentPlayer.HiddenField;
-            else if (GameType == GameType.HumanvsBot && DoesBotGoFirst)
-                return Player1.HiddenField;
-            else if (GameType == GameType.HumanvsBot && !DoesBotGoFirst)
-                return Player2.HiddenField;
-            else
-                return Player1.OpenedField;
-        }
-
-        private char[,] DefineDrawingField2()
-        {
-            if (GameType == GameType.HumanvsHuman)
-                return CurrentPlayer.OpenedField;
-            else if (GameType == GameType.HumanvsBot && DoesBotGoFirst)
-                return Player2.OpenedField;
-            else if (GameType == GameType.HumanvsBot && !DoesBotGoFirst)
-                return Player1.OpenedField;
-            else
-                return Player2.OpenedField;
         }
 
         private bool IsTheHumanMove() =>
