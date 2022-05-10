@@ -12,7 +12,9 @@ namespace SeaBattle
     public class Lobby
     {
         public bool IsEndGame = true;
-        private ConsoleKey PlayAgainKey = ConsoleKey.Spacebar;
+        private PlayerInfo Player1;
+        private PlayerInfo Player2;
+
         public void OpenLobby()
         {
             ShowGreating();
@@ -69,14 +71,14 @@ namespace SeaBattle
 
         public void EndRound()
         {
-            WriteResultMessage();
-            //forlater
-            //WriteOfferMessage();
-            //IsEndGame = !HavePlayAgainKeyInput();
-            //Console.Clear();
+            WriteRoundResult();
+
+            WriteScore();
+            IsEndGame = HasSomebodyWin();
+            Console.Clear();
         }
 
-        private void WriteResultMessage()
+        private void WriteRoundResult()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             (string WinPlayer, string LosePlayer) PlayersNames = ("First Player", "Second Player");
@@ -89,10 +91,19 @@ namespace SeaBattle
         private (string, string) PlaceNamesRight((string Player1, string Player2) playersNames) =>
             Game.IsFirstPlayerWin ? (playersNames.Player1, playersNames.Player2) : (playersNames.Player2, playersNames.Player1);
 
-        private void WriteOfferMessage() =>
-            Console.WriteLine($"If you want to play again - press '{PlayAgainKey}'");
+        private void WriteScore()
+        {
 
-        private bool HavePlayAgainKeyInput() =>
-            InputController.GetInputKey() == PlayAgainKey;
+        }
+
+        private bool HasSomebodyWin() 
+        {
+            return false;
+        }
+
+        private void WriteGameResult()
+        {
+
+        }
     }
 }
