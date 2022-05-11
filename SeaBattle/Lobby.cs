@@ -12,8 +12,8 @@ namespace SeaBattle
     public class Lobby
     {
         public bool IsEndGame = true;
-        public static PlayerInfo Player1;
-        public static PlayerInfo Player2;
+        public PlayerInfo Player1;
+        public PlayerInfo Player2;
 
         private GameType gameType;
         private bool doesBotGoFirst;
