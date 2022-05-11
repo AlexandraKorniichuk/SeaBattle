@@ -174,9 +174,9 @@ namespace SeaBattle
         {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             if (IsFirstPlayerMove)
-                Console.WriteLine("First Player");
+                Console.WriteLine(Lobby.Player1.Name);
             else
-                Console.WriteLine("Second Player");
+                Console.WriteLine(Lobby.Player2.Name);
             Console.ForegroundColor = ConsoleColor.White;
         }
     }

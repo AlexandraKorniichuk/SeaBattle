@@ -1,6 +1,6 @@
 ﻿namespace SeaBattle
 {
-    internal class PlayerInfo
+    public class PlayerInfo
     {
         public string Name;
         public int WinsAmount;

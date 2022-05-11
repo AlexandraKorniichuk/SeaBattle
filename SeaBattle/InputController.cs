@@ -35,7 +35,11 @@ namespace SeaBattle
             return inputKey;
         }
 
-        public static ConsoleKey GetInputKey() =>
-            Console.ReadKey(true).Key;
+        public static string InputName()
+        {
+            Console.Clear();
+            Console.WriteLine("Write your name");
+            return Console.ReadLine();
+        }
     }
 }

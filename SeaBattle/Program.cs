@@ -8,11 +8,13 @@ namespace SeaBattle
         {
             Lobby lobby = new Lobby();
 
+            lobby.OpenLobby();
             do
             {
-                lobby.OpenLobby();
+                lobby.StartNewRound();
                 lobby.EndRound();
             } while (!lobby.IsEndGame);
+            lobby.WriteGameResult();
             Console.ReadKey();
         }
     }
