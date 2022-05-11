@@ -32,7 +32,7 @@ namespace SeaBattle
 
         public void StartNewRound()
         {
-            Game game = new Game();
+            Game game = new Game(Player1.Name, Player2.Name);
             game.StartNewRound(gameType, doesBotGoFirst);
         }
 

@@ -20,16 +20,17 @@ namespace SeaBattle
 
         bool willShipDrown = false;
 
+        public Game (string name1, string name2)
+        {
+            Player1 = new GamePlayer(name1);
+            Player2 = new GamePlayer(name2);
+        }
+
         public void StartNewRound(GameType gameType, bool doesBotGoFirst)
         {
             GameType = gameType;
-
-            Player1 = new GamePlayer();
-            Player2 = new GamePlayer();
-
-            field = new Field();
-
             DoesBotGoFirst = doesBotGoFirst;
+            field = new Field();
             IsFirstPlayerMove = true;
 
             GameLoop();
@@ -173,10 +174,8 @@ namespace SeaBattle
         private void WriteWhosMove()
         {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            if (IsFirstPlayerMove)
-                Console.WriteLine(Lobby.Player1.Name);
-            else
-                Console.WriteLine(Lobby.Player2.Name);
+            string name = IsFirstPlayerMove ? Player1.Name : Player2.Name;
+            Console.WriteLine($"{name}'s move");
             Console.ForegroundColor = ConsoleColor.White;
         }
     }
