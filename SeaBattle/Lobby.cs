@@ -11,9 +11,9 @@ namespace SeaBattle
 
     public class Lobby
     {
-        public bool IsEndGame = true;
-        public PlayerInfo Player1;
-        public PlayerInfo Player2;
+        private bool IsEndGame = true;
+        private PlayerInfo Player1;
+        private PlayerInfo Player2;
 
         private GameType gameType;
         private bool doesBotGoFirst;
@@ -21,19 +21,24 @@ namespace SeaBattle
         private string WinnerName;
         private const int WinsAmountToWin = 3;
 
-        public void OpenLobby()
+        public void StartLobby()
+        {
+            OpenLobby();
+            do
+            {
+                StartNewRound();
+                EndRound();
+            } while (!IsEndGame);
+            WriteGameResult();
+        }
+
+        private void OpenLobby()
         {
             ShowGreating();
             gameType = GetInputGameTypeKey();
             doesBotGoFirst = DoesBotGoFirst();
             CreatePlayers();
             SetConsoleSettings();
-        }
-
-        public void StartNewRound()
-        {
-            Game game = new Game(Player1.Name, Player2.Name);
-            game.StartNewRound(gameType, doesBotGoFirst);
         }
 
         private void ShowGreating()
@@ -108,6 +113,13 @@ namespace SeaBattle
         private void SetConsoleSettings() =>
             Console.CursorSize = 100;
 
+        private void StartNewRound()
+        {
+            Round round = new Round(Player1.Name, Player2.Name);
+            round.StartNewRound(gameType, doesBotGoFirst);
+        }
+
+
         public void EndRound()
         {
             WriteRoundResult();
@@ -131,7 +143,7 @@ namespace SeaBattle
         }
 
         private (string, string) PlaceNamesRight() =>
-            Game.IsFirstPlayerWin ? (Player1.Name, Player2.Name) : (Player2.Name, Player1.Name);
+            Round.IsFirstPlayerWin ? (Player1.Name, Player2.Name) : (Player2.Name, Player1.Name);
 
         private void WriteScore()
         {
@@ -142,16 +154,16 @@ namespace SeaBattle
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        private void WritePlayerScore(PlayerInfo Player) =>
-            Console.WriteLine($"{Player.Name}: {Player.WinsAmount}");
-
         private void AddWinToPlayer()
         {
-            if (Game.IsFirstPlayerWin)
+            if (Round.IsFirstPlayerWin)
                 Player1.WinsAmount++;
             else
                 Player2.WinsAmount++; 
         }
+
+        private void WritePlayerScore(PlayerInfo Player) =>
+            Console.WriteLine($"{Player.Name}: {Player.WinsAmount}");
 
         private bool HasSomebodyWin() =>
             Player1.WinsAmount == WinsAmountToWin || Player2.WinsAmount == WinsAmountToWin;

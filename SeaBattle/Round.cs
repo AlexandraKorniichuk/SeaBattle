@@ -2,7 +2,7 @@
 
 namespace SeaBattle
 {
-    public class Game
+    public class Round
     {
         private GamePlayer Player1;
         private GamePlayer Player2;
@@ -20,7 +20,7 @@ namespace SeaBattle
 
         bool willShipDrown = false;
 
-        public Game (string name1, string name2)
+        public Round (string name1, string name2)
         {
             Player1 = new GamePlayer(name1);
             Player2 = new GamePlayer(name2);
