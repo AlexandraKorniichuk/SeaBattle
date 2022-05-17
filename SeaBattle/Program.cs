@@ -7,9 +7,7 @@ namespace SeaBattle
         static void Main(string[] args)
         {
             Lobby lobby = new Lobby();
-
             lobby.StartLobby();
-            Console.ReadKey();
         }
     }
 }
