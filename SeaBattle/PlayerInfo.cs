@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace SeaBattle
 {
@@ -7,7 +8,8 @@ namespace SeaBattle
     {
         public string Name;
         public int WinsAmount;
-        [NonSerialized] public int GameWinsAmount;
+        [XmlIgnore] 
+        public int GameWinsAmount;
 
         public PlayerInfo()
         {
