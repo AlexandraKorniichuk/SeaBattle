@@ -17,8 +17,8 @@ namespace SeaBattle
         private bool IsFirstPlayerMove;
         private bool DoesBotGoFirst;
 
-        public static bool IsFirstPlayerWin;
-        public static double ShipsPersantageLeft;
+        public bool IsFirstPlayerWin;
+        public double ShipsPersantageLeft = 0;
 
         bool willShipDrown = false;
 
@@ -34,7 +34,6 @@ namespace SeaBattle
             DoesBotGoFirst = doesBotGoFirst;
             field = new Field();
             IsFirstPlayerMove = true;
-            ShipsPersantageLeft = 0;
 
             GameLoop();
             IsFirstPlayerWin = IsPlayerWin(Player1.HitsAmount);

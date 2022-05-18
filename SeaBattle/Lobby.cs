@@ -18,6 +18,7 @@ namespace SeaBattle
 
         private bool doesBotGoFirst;
         private string WinnerName;
+        private Round round;
 
         private PlayerInfo Player1;
         private PlayerInfo Player2;
@@ -181,7 +182,7 @@ namespace SeaBattle
 
         private void StartNewRound()
         {
-            Round round = new Round(Player1.Name, Player2.Name);
+            round = new Round(Player1.Name, Player2.Name);
             round.StartNewRound(gameType, doesBotGoFirst);
         }
 
@@ -215,7 +216,7 @@ namespace SeaBattle
         }
 
         private (string, string) PlaceNamesRight() =>
-            Round.IsFirstPlayerWin ? (Player1.Name, Player2.Name) : (Player2.Name, Player1.Name);
+            round.IsFirstPlayerWin ? (Player1.Name, Player2.Name) : (Player2.Name, Player1.Name);
 
         private void WriteScore()
         {
@@ -228,7 +229,7 @@ namespace SeaBattle
 
         private void AddWinToPlayer()
         {
-            (PlayerInfo, PlayerInfo) Players = Round.IsFirstPlayerWin ? (Player1, Player2) : (Player2, Player1);
+            (PlayerInfo, PlayerInfo) Players = round.IsFirstPlayerWin ? (Player1, Player2) : (Player2, Player1);
             IncreaseWins(Players);
         }
 
@@ -246,7 +247,7 @@ namespace SeaBattle
         {
             double MMRPersantage = Players.WinPlayer.MMR / Players.LosePlayer.MMR * (1 - PlayerInfo.ShipsLeftValueInMMR);
             MMRPersantage = Players.WinPlayer.MMR < Players.LosePlayer.MMR ? MMRPersantage : 0;
-            MMRPersantage += Round.ShipsPersantageLeft * PlayerInfo.ShipsLeftValueInMMR;
+            MMRPersantage += round.ShipsPersantageLeft * PlayerInfo.ShipsLeftValueInMMR;
 
             Players.WinPlayer.MMR += Players.WinPlayer.MMR * MMRPersantage;
             Players.LosePlayer.MMR -= Players.LosePlayer.MMR * MMRPersantage;
@@ -256,7 +257,7 @@ namespace SeaBattle
 
         private void CalculateMMRForHumanVSBotType((PlayerInfo WinPlayer, PlayerInfo LosePlayer) Players)
         {
-            double MMRPersantage = Round.ShipsPersantageLeft * PlayerInfo.ShipsLeftValueInMMR;
+            double MMRPersantage = round.ShipsPersantageLeft * PlayerInfo.ShipsLeftValueInMMR;
             if (Players.WinPlayer.MMR == 0)
                 Players.LosePlayer.MMR -= Players.LosePlayer.MMR * MMRPersantage;
             else if (Players.LosePlayer.MMR == 0)
