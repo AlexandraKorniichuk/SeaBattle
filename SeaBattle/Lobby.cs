@@ -146,7 +146,6 @@ namespace SeaBattle
                 else
                     WriteProfileInfo(Player1);
             }
-            Console.ReadKey();
         }
 
         private void WriteProfileInfo(PlayerInfo profile)
