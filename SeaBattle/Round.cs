@@ -16,7 +16,9 @@ namespace SeaBattle
 
         private bool IsFirstPlayerMove;
         private bool DoesBotGoFirst;
+
         public static bool IsFirstPlayerWin;
+        public static double ShipsPersantageLeft;
 
         bool willShipDrown = false;
 
@@ -32,9 +34,11 @@ namespace SeaBattle
             DoesBotGoFirst = doesBotGoFirst;
             field = new Field();
             IsFirstPlayerMove = true;
+            ShipsPersantageLeft = 0;
 
             GameLoop();
             IsFirstPlayerWin = IsPlayerWin(Player1.HitsAmount);
+            ShipsPersantageLeft = CalculateShipsLeft();
         }
 
         private void GameLoop()
@@ -177,6 +181,12 @@ namespace SeaBattle
             string name = IsFirstPlayerMove ? Player1.Name : Player2.Name;
             Console.WriteLine($"{name}'s move");
             Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        private double CalculateShipsLeft()
+        {
+            int hitsAmount = IsFirstPlayerWin ? Player2.HitsAmount : Player1.HitsAmount;
+            return (Field.ShipCount - hitsAmount) / Field.ShipCount;
         }
     }
 }

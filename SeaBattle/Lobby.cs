@@ -104,11 +104,10 @@ namespace SeaBattle
             if (gameType == GameType.HumanvsBot)
             {
                 PlayerInfo Player = doesBotGoFirst ? Player2 : Player1;
-                Player = CreatePlayer(Player);
-                //if (doesBotGoFirst)
-                //    Player2 = CreatePlayer(Player2);
-                //else
-                //    Player1 = CreatePlayer(Player1);
+                if (doesBotGoFirst)
+                    Player2 = CreatePlayer(Player2);
+                else
+                    Player1 = CreatePlayer(Player1);
             }
         }
 
@@ -124,7 +123,7 @@ namespace SeaBattle
         private PlayerInfo CreateProfile(PlayerInfo profile, string name)
         {
             profile.Name = name;
-            profile.WinsAmount = 0;
+            profile.MMR = 100;
             serialization.SerializeProfile(profile, FileMode.Create);
             return profile;
         }
@@ -134,15 +133,25 @@ namespace SeaBattle
 
         private void WriteProfilesInfo()
         {
-            WriteProfileInfo(Player1);
-            WriteProfileInfo(Player2);
-            Console.ReadKey();
+            if (gameType == GameType.HumanvsHuman)
+            {
+                WriteProfileInfo(Player1);
+                WriteProfileInfo(Player2);
+                Console.ReadKey();
+            }
+            else if (gameType == GameType.HumanvsBot)
+            {
+                if (doesBotGoFirst)
+                    WriteProfileInfo(Player2);
+                else
+                    WriteProfileInfo(Player1);
+            }
         }
 
         private void WriteProfileInfo(PlayerInfo profile)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine($"Profile: {profile.Name}, wins amount {profile.WinsAmount}");
+            Console.WriteLine($"Profile: {profile.Name}, MMR {profile.MMR}");
             Console.ForegroundColor = ConsoleColor.White;   
         }
 
@@ -218,14 +227,46 @@ namespace SeaBattle
 
         private void AddWinToPlayer()
         {
-            PlayerInfo WinPlayer = Round.IsFirstPlayerWin ? Player1 : Player2;
-            IncreaseWinsAmount(WinPlayer);
+            (PlayerInfo, PlayerInfo) Players = Round.IsFirstPlayerWin ? (Player1, Player2) : (Player2, Player1);
+            IncreaseWins(Players);
         }
 
-        private void IncreaseWinsAmount(PlayerInfo Player)
+        private void IncreaseWins((PlayerInfo WinPlayer, PlayerInfo LosePlayer) Players)
         {
-            Player.WinsAmount++;
-            Player.GameWinsAmount++;
+            Players.WinPlayer.GameWinsAmount++;
+
+            if (gameType == GameType.HumanvsHuman)
+                CalculateMMRForHumanType(Players);
+            else if (gameType == GameType.HumanvsBot)
+                CalculateMMRForHumanVSBotType(Players);
+        }
+
+        private void CalculateMMRForHumanType((PlayerInfo WinPlayer, PlayerInfo LosePlayer) Players)
+        {
+            double MMRPersantage = Players.WinPlayer.MMR / Players.LosePlayer.MMR;
+            MMRPersantage = Players.WinPlayer.MMR < Players.LosePlayer.MMR ? MMRPersantage : 0;
+            MMRPersantage += Round.ShipsPersantageLeft * PlayerInfo.ShipsLeftValueInMMR;
+
+            Players.WinPlayer.MMR += Players.WinPlayer.MMR * MMRPersantage;
+            Players.LosePlayer.MMR -= Players.LosePlayer.MMR * MMRPersantage;
+            if (Players.LosePlayer.MMR <= 0) Players.LosePlayer.MMR = 100;
+            RoundMMR();
+        }
+
+        private void CalculateMMRForHumanVSBotType((PlayerInfo WinPlayer, PlayerInfo LosePlayer) Players)
+        {
+            double MMRPersantage = Round.ShipsPersantageLeft * PlayerInfo.ShipsLeftValueInMMR;
+            if (Players.WinPlayer.MMR == 0)
+                Players.LosePlayer.MMR -= Players.LosePlayer.MMR * MMRPersantage;
+            else if (Players.LosePlayer.MMR == 0)
+                Players.WinPlayer.MMR += Players.WinPlayer.MMR * MMRPersantage;
+            RoundMMR();
+        }
+
+        private void RoundMMR()
+        {
+            Player1.MMR = Math.Round(Player1.MMR);
+            Player2.MMR = Math.Round(Player2.MMR);
         }
 
         private void WritePlayerScore(PlayerInfo Player) =>
@@ -250,6 +291,7 @@ namespace SeaBattle
             {
                 PlayerInfo Player = doesBotGoFirst ? Player2 : Player1;
                 serialization.SerializeProfile(Player, FileMode.Open);
+                return;
             }
 
             serialization.SerializeProfile(Player1, FileMode.Open);

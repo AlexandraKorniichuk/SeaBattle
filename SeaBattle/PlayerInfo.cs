@@ -8,9 +8,12 @@ namespace SeaBattle
     {
         public string Name;
         public int WinsAmount;
+        public double MMR;
         [XmlIgnore] 
         public int GameWinsAmount;
-
+        [XmlIgnore]
+        public const double ShipsLeftValueInMMR = 0.1;
+        
         public PlayerInfo()
         {
             GameWinsAmount = 0;
