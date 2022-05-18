@@ -22,7 +22,12 @@ namespace SeaBattle
 
         private PlayerInfo Player1;
         private PlayerInfo Player2;
-        private Serialization serialization = new Serialization();
+        private Serialization serialization;
+
+        public Lobby()
+        {
+            serialization = new Serialization();
+        }
 
         public void StartLobby()
         {
