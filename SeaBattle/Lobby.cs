@@ -132,6 +132,8 @@ namespace SeaBattle
 
         private void WriteProfilesInfo()
         {
+            if (gameType == GameType.BotvsBot) return;
+
             if (gameType == GameType.HumanvsHuman)
             {
                 WriteProfileInfo(Player1);
@@ -144,6 +146,7 @@ namespace SeaBattle
                 else
                     WriteProfileInfo(Player1);
             }
+            Console.ReadKey();
         }
 
         private void WriteProfileInfo(PlayerInfo profile)
