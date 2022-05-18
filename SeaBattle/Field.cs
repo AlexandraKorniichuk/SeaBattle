@@ -4,7 +4,7 @@ namespace SeaBattle
 {
     public class Field
     {
-        public static (int i, int j) FieldSize = (2, 2);
+        public static (int i, int j) FieldSize = (1, 1);
         public static int ShipCount;
         private double ShipsPersantage = 0.2;
 

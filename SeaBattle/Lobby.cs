@@ -103,7 +103,6 @@ namespace SeaBattle
 
             if (gameType == GameType.HumanvsBot)
             {
-                PlayerInfo Player = doesBotGoFirst ? Player2 : Player1;
                 if (doesBotGoFirst)
                     Player2 = CreatePlayer(Player2);
                 else
@@ -137,7 +136,6 @@ namespace SeaBattle
             {
                 WriteProfileInfo(Player1);
                 WriteProfileInfo(Player2);
-                Console.ReadKey();
             }
             else if (gameType == GameType.HumanvsBot)
             {
@@ -200,6 +198,7 @@ namespace SeaBattle
                 DefineWinner();
                 SaveProfiles();
             }
+            Console.ReadKey();
             Console.Clear();
         }
 
@@ -243,7 +242,7 @@ namespace SeaBattle
 
         private void CalculateMMRForHumanType((PlayerInfo WinPlayer, PlayerInfo LosePlayer) Players)
         {
-            double MMRPersantage = Players.WinPlayer.MMR / Players.LosePlayer.MMR;
+            double MMRPersantage = Players.WinPlayer.MMR / Players.LosePlayer.MMR * (1 - PlayerInfo.ShipsLeftValueInMMR);
             MMRPersantage = Players.WinPlayer.MMR < Players.LosePlayer.MMR ? MMRPersantage : 0;
             MMRPersantage += Round.ShipsPersantageLeft * PlayerInfo.ShipsLeftValueInMMR;
 
@@ -304,6 +303,7 @@ namespace SeaBattle
             Console.WriteLine($"Congratulations {WinnerName}");
             Console.WriteLine();
             WriteProfilesInfo();
+            Console.ReadKey();
         }
     }
 }
